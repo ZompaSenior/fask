@@ -20,30 +20,14 @@ def form_manager(request, object_id, object_model, form_model, template_name, li
             setattr(tmp_object, key, value)
         
     if request.method == "POST":
-        
-        """
-        if(issubclass(object_model, RevInfo)):
-            tmp_name = request.POST.get('name', '')
-            if(tmp_object):
-                tmp_new_revision = object_model.objects.filter(name = tmp_name).aggregate(Max('revision'))['revision__max'] + 1
-            else:
-                tmp_new_revision = 1
-            
-            tmp_object = None
-        """
         form = form_model(request.POST, request.FILES, instance = tmp_object)
         
         if(issubclass(object_model, EditInfo)):
             form.set_user(str(request.user))
         
-        """
-        if(issubclass(object_model, RevInfo)):
-            form.set_revision(tmp_new_revision)
-        """
-        
         if form.is_valid():
             form.save()
-            print(list_view_function.__name__)
+            
             if(list_view_function.__code__.co_argcount == 1):
                 return redirect('/%s/' % (list_view_function.__name__,))
                 # return list_view_function(request)
@@ -55,7 +39,8 @@ def form_manager(request, object_id, object_model, form_model, template_name, li
     else:
         form = form_model(instance = tmp_object)
         
-    context = {form_model.__name__.lower: tmp_object, 'form': form, 'show_trashed': show_trashed }
+    context = {object_model.__name__.lower(): tmp_object, 'form': form, 'show_trashed': show_trashed }
+    print(object_model.__name__.lower())
     
     return render(request, template_name, context)
 

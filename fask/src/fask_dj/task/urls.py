@@ -21,5 +21,5 @@ urlpatterns = [
     url(r'^tasks', views.tasks, name = 'tasks'),
     url(r'^task/(?P<task_id>[0-9]+)/$', views.task, name = 'task'),
     url(r'^task_delete/(?P<task_id>[0-9]+)/$', views.task_delete, name = 'task_delete'),
-    url(r'^task_project/(?P<task_id>[0-9]+)/(?P<project_id>[0-9]+)/$', views.task_project, name = 'task_project'),
+    url(r'^task_project/(?P<task_id>[0-9]+)/(?P<project_id>[0-9]+)/(?P<redirect_name>[a-z]+)$', views.task_project, name = 'task_project'),
 ]
