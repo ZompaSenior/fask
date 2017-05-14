@@ -10,8 +10,14 @@ def form_manager(request, object_id, object_model, form_model, template_name, li
     
     if(len(object_id) > 0 and object_id != '0' and object_id != '_'):
         tmp_object = get_object_or_404(object_model, pk = object_id)
-    else:
+    elif(default == None):
         tmp_object = None
+    else:
+        tmp_object = object_model()
+        
+        for key, value in default.items():
+            print(key, value)
+            setattr(tmp_object, key, value)
         
     if request.method == "POST":
         
@@ -49,12 +55,6 @@ def form_manager(request, object_id, object_model, form_model, template_name, li
     else:
         form = form_model(instance = tmp_object)
         
-        if(default == None):
-            pass
-        else:
-            for key, value in default.items():
-                getattr(form, key)(value)
-            
     context = {form_model.__name__.lower: tmp_object, 'form': form, 'show_trashed': show_trashed }
     
     return render(request, template_name, context)

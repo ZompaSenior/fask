@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Task, TaskForm
+from project.models import Project
 from base.views import form_manager, delete_manager
 
 # @login_required
@@ -18,5 +19,5 @@ def task_delete(request, project_id):
 
 # @login_required
 def task_project(request, task_id, project_id):
-    return form_manager(request, task_id, Task, TaskForm, 'task/task.html', tasks, default = {'set_project': project_id})
+    return form_manager(request, task_id, Task, TaskForm, 'task/task.html', tasks, default = {'project': get_object_or_404(Project, pk = project_id)})
 
