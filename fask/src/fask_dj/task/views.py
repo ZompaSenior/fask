@@ -16,8 +16,8 @@ def task(request, task_id):
     return form_manager(request, task_id, Task, TaskForm, 'task/task.html', tasks)
 
 # @login_required
-def task_delete(request, project_id):
-    return delete_manager(request, project_id, Task, tasks)
+def task_delete(request, task_id):
+    return delete_manager(request, task_id, Task, tasks)
 
 # @login_required
 def task_project(request, task_id, project_id, redirect_name):
