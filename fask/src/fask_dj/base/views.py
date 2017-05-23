@@ -48,7 +48,8 @@ def delete_manager(request, object_id, object_model, list_view_function, show_tr
     if(len(object_id) > 0 and object_id != '0' and object_id != '_'):
         tmp_object = get_object_or_404(object_model, pk = object_id)
         if(issubclass(object_model, EditInfo)):
-            tmp_object.set_user(str(request.user))
+            if(hasattr(tmp_object, 'set_user')):
+                tmp_object.set_user(str(request.user))
 
         tmp_object.delete()
     
