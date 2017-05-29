@@ -74,14 +74,16 @@
 									<div class="panel panel-info">
 										<div class="panel-heading">
 											<span class="pull-left">
-											<button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "subtask_task" sub.id obj.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
+											<button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "subtask_task" sub2.id sub.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
+											<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub2.annotation }}">
 												{% if sub2.completed %}
 													<del>
 												{% endif %}
 												{{ sub2.description }}
 												{% if sub2.completed %}
 													</del>
-												{% endif %}											
+												{% endif %}
+											</button>											
 											</span>
 											<span class="pull-right">
 					                        	{% if sub2.completed and sub2.completed_on %}
