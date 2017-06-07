@@ -15,6 +15,13 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+host_name = os.environ.get('COMPUTERNAME')
+
+if(host_name is None):
+    host_name = os.environ.get('HOSTNAME')
+    
+print(host_name)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -81,7 +88,7 @@ WSGI_APPLICATION = 'fask_dj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db-%s.sqlite3' % (host_name)),
     }
 }
 
@@ -130,3 +137,5 @@ STATICFILES_DIRS = (
         os.path.join(BASE_DIR, 'static/'),
         STATIC_URL,
     )
+
+

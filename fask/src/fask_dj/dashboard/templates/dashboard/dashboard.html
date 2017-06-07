@@ -4,6 +4,13 @@
 
 {% block content %}
 
+{% if show_completed %}
+    <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "dashboard" 'false' %}';"> Nascondi completati </button>
+{% else %}
+    <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "dashboard" 'true' %}';"> Mostra completati </button>
+{% endif %}
+<p></p>
+
 {% if projects %}
     {% for obj in projects %}
 	    <div class="row">
@@ -25,80 +32,85 @@
 	                
                    <div class="panel-body">
                         {% for sub in obj.task_project_owner.all %}
-                            <div class="panel panel-info">
-                                <div class="panel-heading clearfix">
-			                        <span class="pull-left">
-										<button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "task_project" sub.id obj.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
-										  
-			                        	<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub.annotation }}" >
-			                        		{% if sub.progression.id == 3 %}
-			                        			<del>
-			                        		{% endif %}
-			                        		{{ sub.description }}
-			                        		{% if sub.progression.id == 3 %}
-			                        			</del>
-			                        		{% endif %}
-			                        	</button>
-			                        </span>
-			                        <span class="pull-right">
-			                        	{% if sub.due_to %}
-			                        		<button type="button" class="btn btn-default btn-xs">Due To: {{ sub.due_to }}</button>
-			                        	{% endif %}
-			                        	{% if sub.assigned_to %}
-			                        		<button type="button" class="btn btn-default btn-xs">Assigned To: {{ sub.assigned_to }}</button>
-			                        	{% endif %}
-			                        	{% if sub.priority.id == 1 %}
-				                        	<button type="button" class="btn btn-success btn-xs">{{sub.priority}}</button>
-				                        {% elif sub.priority.id == 2 %}
-				                        	<button type="button" class="btn btn-warning btn-xs">{{sub.priority}}</button>
-				                        {% elif sub.priority.id == 3 %}
-				                        	<button type="button" class="btn btn-danger btn-xs">{{sub.priority}}</button>
-				                        {% endif %}
-				                          
-			                        	{% if sub.progression %}
-				                        	<button type="button" class="btn btn-primary btn-xs">{{sub.progression}}</button>
-				                        	{% if sub.progression.id == 3 and sub.completed_on %}
-				                        		<button type="button" class="btn btn-default btn-xs">Completed On: {{ sub.completed_on }}</button>
+                            {% if show_completed or sub.progression|truncatewords:"2" != "99 - ..." %}
+	                            <div class="panel panel-info">
+	                                <div class="panel-heading clearfix">
+				                        <span class="pull-left">
+											<button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "task_project" sub.id obj.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
+											  
+				                        	<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub.annotation }}" >
+				                        		{% if sub.progression.id == 3 %}
+				                        			<del>
+				                        		{% endif %}
+				                        		{{ sub.description }}
+				                        		{% if sub.progression.id == 3 %}
+				                        			</del>
+				                        		{% endif %}
+				                        	</button>
+				                        </span>
+				                        <span class="pull-right">
+				                        	{% if sub.due_to %}
+				                        		<button type="button" class="btn btn-default btn-xs">Due To: {{ sub.due_to }}</button>
 				                        	{% endif %}
-				                        {% endif %}
-				                        <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "subtask_task" 0 sub.id 'dashboard' %}';"><i class="fa fa-plus-circle fa-1x"></i></button>
-			                        </span>
-
-                                </div> <!-- div class="panel-heading clearfix" -->
-                                
-                                {% if sub.task_owner.all %}
-                                <div class="panel-body">
-
-                                    {% for sub2 in sub.task_owner.all %}
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading clearfix">
-                                                <span class="pull-left">
-                                                <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "subtask_task" sub2.id sub.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
-                                                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub2.annotation }}">
-                                                    {% if sub2.completed %}
-                                                        <del>
-                                                    {% endif %}
-                                                    {{ sub2.description }}
-                                                    {% if sub2.completed %}
-                                                        </del>
-                                                    {% endif %}
-                                                </button>
-                                                </span>
-                                                <span class="pull-right">
-                                                    {% if sub2.completed and sub2.completed_on %}
-                                                        <button type="button" class="btn btn-default btn-xs">Completed On: {{ sub2.completed_on }}</button>
-                                                    {% endif %}
-                                                </span>
-                                                <!-- <div class="clearfix"></div> -->
-                                            </div> <!-- div class="panel-heading clearfix" -->
-                                            
-                                        </div> <!-- div class="panel panel-info" -->
-                                    {% endfor %}
-
-                                </div>  <!-- div class="panel-body" -->
-                                {% endif %}
-                                    
-                            </div> <!-- div class="panel panel-default" -->
+				                        	{% if sub.assigned_to %}
+				                        		<button type="button" class="btn btn-default btn-xs">Assigned To: {{ sub.assigned_to }}</button>
+				                        	{% endif %}
+				                        	{% if sub.priority.id == 1 %}
+					                        	<button type="button" class="btn btn-success btn-xs">{{sub.priority}}</button>
+					                        {% elif sub.priority.id == 2 %}
+					                        	<button type="button" class="btn btn-warning btn-xs">{{sub.priority}}</button>
+					                        {% elif sub.priority.id == 3 %}
+					                        	<button type="button" class="btn btn-danger btn-xs">{{sub.priority}}</button>
+					                        {% endif %}
+					                          
+				                        	{% if sub.progression %}
+					                        	<button type="button" class="btn btn-primary btn-xs">{{sub.progression}}</button>
+					                        	{% if sub.progression.id == 3 and sub.completed_on %}
+					                        		<button type="button" class="btn btn-default btn-xs">Completed On: {{ sub.completed_on }}</button>
+					                        	{% endif %}
+					                        {% endif %}
+					                        <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "subtask_task" 0 sub.id 'dashboard' %}';"><i class="fa fa-plus-circle fa-1x"></i></button>
+				                        </span>
+	
+	                                </div> <!-- div class="panel-heading clearfix" -->
+	                                
+	                                {% if sub.task_owner.all %}
+	                                <div class="panel-body">
+	
+	                                    {% for sub2 in sub.task_owner.all %}
+	                                       {% if show_completed or not sub2.completed %}
+		                                        <div class="panel panel-default">
+		                                            <div class="panel-heading clearfix">
+		                                                <span class="pull-left">
+		                                                <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "subtask_task" sub2.id sub.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
+		                                                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub2.annotation }}">
+		                                                    {% if sub2.completed %}
+		                                                        <del>
+		                                                    {% endif %}
+		                                                    {{ sub2.description }}
+		                                                    {% if sub2.completed %}
+		                                                        </del>
+		                                                    {% endif %}
+		                                                </button>
+		                                                </span>
+		                                                <span class="pull-right">
+		                                                    {% if sub2.completed and sub2.completed_on %}
+		                                                        <button type="button" class="btn btn-default btn-xs">Completed On: {{ sub2.completed_on }}</button>
+		                                                    {% endif %}
+		                                                </span>
+		                                                <!-- <div class="clearfix"></div> -->
+		                                            </div> <!-- div class="panel-heading clearfix" -->
+		                                            
+		                                        </div> <!-- div class="panel panel-info" -->
+	                                       {% endif %}
+	                                    {% endfor %}
+	
+	                                </div>  <!-- div class="panel-body" -->
+	                                {% endif %}
+	                                    
+	                            </div> <!-- div class="panel panel-default" -->
+	                            
+                            {% endif %}
 
                         {% endfor %}
                             
