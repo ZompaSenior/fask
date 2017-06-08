@@ -16,7 +16,7 @@ def dashboard(request, show_completed = 'false'):
     if(tmp_show_completed):
         projects = Project.objects.all()
     else:
-        projects = Project.objects.filter(state__description='99 - Completato')
+        projects = Project.objects.exclude(state__description='99 - Completato')
         
     context = {'projects': projects, 'show_completed': tmp_show_completed}
     return HttpResponse(template.render(context, request))
