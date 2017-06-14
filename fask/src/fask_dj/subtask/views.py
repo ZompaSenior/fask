@@ -4,6 +4,7 @@ from dashboard.views import dashboard
 from base.views import form_manager, delete_manager
 from task.views import task
 from task.models import Task
+from django.contrib.auth.decorators import login_required
 
 # @login_required
 def subtasks(request, show_trashed = False):
@@ -11,15 +12,15 @@ def subtasks(request, show_trashed = False):
     context = {'subtasks': subtasks, }
     return render(request, 'subtask/subtasks.html', context)
 
-# @login_required
+@login_required
 def subtask(request, subtask_id):
     return form_manager(request, subtask_id, SubTask, SubTaskForm, 'task/task.html', subtasks)
 
-# @login_required
+@login_required
 def subtask_delete(request, subtask_id):
     return delete_manager(request, subtask_id, SubTask, subtasks)
 
-# @login_required
+@login_required
 def subtask_task(request, subtask_id, task_id, redirect_name):
     if(redirect_name == 'dashboard'):
         tmp_list_view_function = dashboard

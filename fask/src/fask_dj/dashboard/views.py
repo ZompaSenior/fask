@@ -12,6 +12,8 @@ def dashboard(request, show_completed = 'false'):
         tmp_show_completed = bool(index)
     except ValueError:
         tmp_show_completed = False
+    except AttributeError:
+        tmp_show_completed = False
     
     if(tmp_show_completed):
         projects = Project.objects.all()

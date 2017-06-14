@@ -1,0 +1,24 @@
+{% extends "base_essential.html" %}
+
+{% block essential_body %}
+
+{% load staticfiles %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Logout</h3>
+                </div>
+                <div class="panel-body">
+                    <img src="{% static "img/buttons/Gnome-system-log-out-64.png" %}" alt="Immagine Logaout" class="col-md-offset-5"/>
+                    <button type="button" class="btn btn-default col-lg-12" onClick="location.href='{% url 'login' %}'">Effettua Nuovamente Il login</button>
+                    <!-- <button type="button" class="btn btn-default col-lg-4" onClick="location.href='{% url 'login' %}'"><img src="{% static "img/buttons/Gnome-preferences-system-windows-64.png" %}" alt="Icona Tipi Posaggio"/><br />Tipi Posaggio</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
