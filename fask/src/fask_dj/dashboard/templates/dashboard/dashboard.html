@@ -4,12 +4,27 @@
 
 {% block content %}
 
-{% if show_completed %}
-    <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "dashboard" 'false' %}';"> Nascondi completati </button>
-{% else %}
-    <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "dashboard" 'true' %}';"> Mostra completati </button>
-{% endif %}
-<p></p>
+<form role="form" method="GET" action="{% url "dashboard" %}">
+    {% csrf_token %}
+    {% if request.GET.show_completed == "True" %}
+        <input type="hidden" name="show_completed" value="False"></input>
+    {% else %}
+        <input type="hidden" name="show_completed" value="True"></input>
+    {% endif %}
+    <input type="hidden" name="filter_supervisor" value="{{ request.GET.filter_supervisor }}"></input>
+    <button type="submit" class="btn btn-default col-lg-3">Mostra Completati = {{ request.GET.show_completed }}</button>
+</form>
+
+<form role="form" method="GET" action="{% url "dashboard" %}">
+    {% csrf_token %}
+    <input type="hidden" name="show_completed" value="{{ request.GET.show_completed }}"></input>
+    {% if request.GET.filter_supervisor == "True" %}
+        <input type="hidden" name="filter_supervisor" value="False"></input>
+    {% else %}
+        <input type="hidden" name="filter_supervisor" value="True"></input>
+    {% endif %}
+    <button type="submit" class="btn btn-default col-lg-3">Filtra Progetti = {{ request.GET.filter_supervisor }}</button>
+</form>
 
 {% if projects %}
     {% for obj in projects %}
@@ -23,7 +38,7 @@
 	                        </div> <!-- div class="col-xs-3" -->
 	                        <div class="col-xs-9 text-right">
 	                            <h3>{{ obj.description }}</h3>
-	                            <div>{{ obj.annotation }}</div>
+	                            <div>{{ obj.supervisor }}:{{ obj.id }} - {{ obj.annotation }}</div>
 	                        </div> <!-- div class="col-xs-9 text-right" -->
 	                        
 	                    </div> <!-- div class="row" -->
@@ -32,7 +47,7 @@
 	                
                    <div class="panel-body">
                         {% for sub in obj.task_project_owner.all %}
-                            {% if show_completed or sub.progression|truncatewords:"2" != "99 - ..." %}
+                            {% if request.GET.show_completed == "True" or sub.progression|truncatewords:"2" != "99 - ..." %}
 	                            <div class="panel panel-info">
 	                                <div class="panel-heading clearfix">
 				                        <span class="pull-left">
@@ -78,7 +93,7 @@
 	                                <div class="panel-body">
 	
 	                                    {% for sub2 in sub.task_owner.all %}
-	                                       {% if show_completed or not sub2.completed %}
+	                                       {% if request.GET.show_completed == "True" or not sub2.completed %}
 		                                        <div class="panel panel-default">
 		                                            <div class="panel-heading clearfix">
 		                                                <span class="pull-left">
