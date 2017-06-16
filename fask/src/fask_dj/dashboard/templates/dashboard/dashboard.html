@@ -38,7 +38,11 @@
 	                        </div> <!-- div class="col-xs-3" -->
 	                        <div class="col-xs-9 text-right">
 	                            <h3>{{ obj.description }}</h3>
-	                            <div>{{ obj.supervisor }}:{{ obj.id }} - {{ obj.annotation }}</div>
+	                            <div>
+	                                {% if obj.supervisor %}
+                                        <button type="button" class="btn btn-default btn-xs">Supervisor: {{ obj.supervisor }}</button>
+                                    {% endif %}
+	                            {{ obj.annotation }}</div>
 	                        </div> <!-- div class="col-xs-9 text-right" -->
 	                        
 	                    </div> <!-- div class="row" -->
