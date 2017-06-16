@@ -29,6 +29,7 @@ def dashboard(request):
     if(tmp_show_completed and not tmp_filter_supervisor):
         projects = Project.objects.all()
     else:
+        print(request.user.username)
         if(tmp_show_completed):
             projects = Project.objects.filter(supervisor__username=request.user.username)
         else:
