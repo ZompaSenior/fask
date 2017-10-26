@@ -3,7 +3,6 @@ from django.forms import ModelForm
 from django.forms.models import ModelChoiceField
 from django.contrib.auth.models import User
 from django.forms.fields import DateField
-from bootstrap_datepicker.widgets import DatePicker
 
 
 class FaskObject(models.Model):
@@ -69,8 +68,8 @@ class StandardForm(ModelForm):
             
             if(type(field) is DateField):
                 # field.widget = DatePicker(options = {"format": "mm/dd/yyyy", "autoclose": True})
-                field = DateField(widget=DatePicker(options={"format": "mm/dd/yyyy","autoclose": True}))
-                #field.widget.attrs.update({'class': 'datepicker form-control'})
+                # self.fields[key] = DateField(widget=DateTimePicker(options={"format": "YYYY-MM-DD", "pickTime": False}))
+                field.widget.attrs.update({'class': 'datepicker form-control'})
                 # date = forms.DateField(widget=DatePicker(options={"format": "mm/dd/yyyy","autoclose": True}))
             
 
@@ -104,4 +103,3 @@ class StandardForm(ModelForm):
             data = str(self.revision)
     
         return data
- 

@@ -19,8 +19,11 @@ host_name = os.environ.get('COMPUTERNAME')
 
 if(host_name is None):
     host_name = os.environ.get('HOSTNAME')
+
+if(host_name is None):
+    host_name = os.uname()[1]
     
-print(host_name)
+print('Hostname: ' + host_name)
 
 
 # Quick-start development settings - unsuitable for production
