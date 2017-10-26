@@ -1,6 +1,7 @@
 from django.db import models
 from base.models import FaskObject, EditInfo, StandardForm
 from django.contrib.auth.models import User
+from group.models import ProjectGroup
 
 class ProjectState(FaskObject):
     """
@@ -17,7 +18,11 @@ class Project(FaskObject, EditInfo):
     end_date = models.DateField(verbose_name = "End Date", help_text = "When project should end", blank = True, null = True)
     state = models.ForeignKey(ProjectState, verbose_name = "State", help_text = "The progression state of the project", related_name = 'project_state', to_field = 'id', blank = True, null = True)
     supervisor = models.ForeignKey(User, verbose_name = "Supervisor", help_text = "Who is the project supervisor", related_name = 'project_supervisor', blank = True, null = True)
+    group = models.ForeignKey(ProjectGroup, verbose_name = "Group", help_text = "Owning group", related_name = 'project_group', blank = True, null = True)
+    
 
+    class Meta:
+        ordering = ["group__description", 'description']
     
 
 """ ***************************************************************************
