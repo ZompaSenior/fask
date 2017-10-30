@@ -20,4 +20,5 @@ from . import views
 urlpatterns = [
     url(r'^$', views.dashboard, name='dashboard'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^dashboard_group/(?P<group_id>[0-9]+)/$', views.dashboard_group, name='dashboard_group'),
 ]
