@@ -6,3 +6,7 @@ Fast tasks and projects web application.
 ### dev/test installation
 
 ### production installation
+
+#### windows servers
+
+#### linux server
