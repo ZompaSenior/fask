@@ -2,7 +2,7 @@ from django.db import models
 from django.forms import ModelForm
 from django.forms.models import ModelChoiceField
 from django.contrib.auth.models import User
-from django.forms.fields import DateField
+from django.forms.fields import DateField, DateTimeField
 
 
 class FaskObject(models.Model):
@@ -64,14 +64,14 @@ class StandardForm(ModelForm):
             
             if(key in ('revision', 'trash_state', 'creation_date', 'edit_date', 'creation_user', 'edit_user')):
                 field.widget.attrs['readonly'] = True
+           
+            if (type(field) is DateField):
+                field.widget.input_type ='date'
+                
+                
+                
             
-            
-            if(type(field) is DateField):
-                # field.widget = DatePicker(options = {"format": "mm/dd/yyyy", "autoclose": True})
-                # self.fields[key] = DateField(widget=DateTimePicker(options={"format": "YYYY-MM-DD", "pickTime": False}))
-                field.widget.attrs.update({'class': 'datepicker form-control'})
-                # date = forms.DateField(widget=DatePicker(options={"format": "mm/dd/yyyy","autoclose": True}))
-            
+
 
     def set_user(self, user_info):
         self.user_info = user_info
