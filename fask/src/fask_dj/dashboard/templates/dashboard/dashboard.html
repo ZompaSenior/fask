@@ -4,47 +4,22 @@
 
 {% block content %}
 
-<form role="form" method="GET" action="{% url "dashboard" %}">
-    {% csrf_token %}
-    {% if request.GET.show_completed == "True" %}
-        <input type="hidden" name="show_completed" value="False"></input>
-    {% else %}
-        <input type="hidden" name="show_completed" value="True"></input>
-    {% endif %}
-    <input type="hidden" name="filter_supervisor" value="{{ request.GET.filter_supervisor }}"></input>
-    <input type="hidden" name="filter_assegnee" value="{{ request.GET.filter_assegnee }}"></input>
-    <button type="submit" class="btn btn-default col-lg-3">Mostra Completati = {{ request.GET.show_completed }}</button>
-</form>
-
-<form role="form" method="GET" action="{% url "dashboard" %}">
-    {% csrf_token %}
-    <input type="hidden" name="show_completed" value="{{ request.GET.show_completed }}"></input>
-    {% if request.GET.filter_supervisor == "True" %}
-        <input type="hidden" name="filter_supervisor" value="False"></input>
-    {% else %}
-        <input type="hidden" name="filter_supervisor" value="True"></input>
-    {% endif %}
-    <input type="hidden" name="filter_assegnee" value="{{ request.GET.filter_assegnee }}"></input>
-    <button type="submit" class="btn btn-default col-lg-3">Filtra Progetti = {{ request.GET.filter_supervisor }}</button>
-</form>
-
-<form role="form" method="GET" action="{% url "dashboard" %}">
-    {% csrf_token %}
-    <input type="hidden" name="show_completed" value="{{ request.GET.show_completed }}"></input>
-    <input type="hidden" name="filter_supervisor" value="{{ request.GET.filter_supervisor }}"></input>
-    {% if request.GET.filter_assegnee == "True" %}
-        <input type="hidden" name="filter_assegnee" value="False"></input>
-    {% else %}
-        <input type="hidden" name="filter_assegnee" value="True"></input>
-    {% endif %}
-    <button type="submit" class="btn btn-default col-lg-3">Filtra Task = {{ request.GET.filter_assegnee }}</button>
-</form>
+{% load staticfiles %}
+<div class="row" style="margin: 25px">
+<div><button id = "show_complete_button" type="button" class="block col-lg-2" onclick="Show_Complete()"><img id="show_complete" src="{% static 'img/buttons/Gnome-colors-emblem-desktop-alt-aply-64.png' %}" alt="Completed"/><br/>Visulazza Completati</button>
+<button id = "show_supervisor_button" type="button" class="block col-lg-2" onclick="Show_Supervisor()"><img id="show_supervisor" src="{% static 'img/buttons/Gnome-user-64.png' %}" alt="Assigned Projencts"/><br/> I Miei Progetti</button>
+<button id = "show_task_button" type="button" class="block col-lg-2" onclick="Show_Task()"><img id="show_task" src="{% static 'img/buttons/Gnome-system-mytask-64.png' %}" alt="Assigned Task"/><br/> I Miei Compiti</button>
 
 {% if projects %}
+	<input type="text" class = "form-control" id = "myInput" onkeyup="myFunction()" placeholder="Search for names.." style="width: 300px; margin: 20px; margin-left: 5px; float: right;">
+    <label style="margin-top: 30px; margin-right: 0px; float: right;"> Progetto o Supervisore : </label>
+    </div>
+</div>
+ <div class="row">
     {% for obj in projects %}
 	    <div class="row">
 	        <div class="col-lg-12">
-	            <div class="panel panel-primary">
+	            <div class="panel panel-primary" id="projects_{{obj.description}}">
 	                <div class="panel-heading">
 	                    <div class="row">
 	                        <div class="col-xs-3">
@@ -54,7 +29,9 @@
 	                            <h3>{{ obj.description }}</h3>
 	                            <div>
 	                                {% if obj.supervisor %}
-                                        <button type="button" class="btn btn-default btn-xs">Supervisor: {{ obj.supervisor }}</button>
+                                        <button type="button" class="btn btn-default btn-xs" id="supervisor_{{ obj.supervisor }}_{{obj.description}}" value="projects_{{obj.description}}">Supervisor: {{ obj.supervisor }}</button>
+                                    {% else %}
+                                    	<button type="button" class="btn btn-default btn-xs" id="supervisor_nessun_supervisor_{{obj.description}}" value="projects_{{obj.description}}">Supervisor: -nessuno- </button>
                                     {% endif %}
 	                            {{ obj.annotation }}</div>
 	                        </div> <!-- div class="col-xs-9 text-right" -->
@@ -65,17 +42,17 @@
 	                
                    <div class="panel-body">
                         {% for sub in obj.task_project_owner.all %}
-                            {% if request.GET.show_completed == "True" or sub.progression|truncatewords:"2" != "99 - ..." %}
-                                {% if request.GET.filter_assegnee == "False" or sub.assigned_to.username == request.user.username or not request.GET.filter_assegnee %}
-		                            <div class="panel panel-info">
+                        	{% if request.GET.filter_assegnee == "False" or sub.assigned_to.username == request.user.username or not request.GET.filter_assegnee %}
+		                           {% if sub.progression|truncatewords:"2" == "99 - ..." %}
+		                            	<div class="panel" id="sub_{{sub.description}}" value = "projects_{{obj.description}}" style=" background-color : #65d046; display: none">
+		                           {% else %}
+		                            	<div class="panel panel-info" id="sub_{{sub.description}}" value ="projects_{{obj.description}}">
+		                           {% endif %}
 		                                <div class="panel-heading clearfix">
 					                        <span class="pull-left">
-												<button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "task_project" sub.id obj.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
+												<button type="button" class="btn btn-default btn-xs"  onclick="location.href='{% url "task_project" sub.id obj.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
 												  
-					                        	<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub.annotation }}" >
-					                        		{% if sub.progression.id == 3 %}
-					                        			<del>
-					                        		{% endif %}
+					                        	<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub.annotation }}" value="{{sub.progression}}" id="coplete_sub_{{sub.description}}">
 					                        		{{ sub.description }}
 					                        		{% if sub.progression.id == 3 %}
 					                        			</del>
@@ -87,7 +64,9 @@
 					                        		<button type="button" class="btn btn-default btn-xs">Due To: {{ sub.due_to }}</button>
 					                        	{% endif %}
 					                        	{% if sub.assigned_to %}
-					                        		<button type="button" class="btn btn-default btn-xs">Assigned To: {{ sub.assigned_to }}</button>
+					                        		<button type="button" class="btn btn-default btn-xs" id="assigned_{{ sub.assigned_to }}_{{obj.description}}" value="sub_{{sub.description}}">Assigned To: {{ sub.assigned_to }}</button>
+					                        	{% else %}
+					                        		<button type="button" class="btn btn-default btn-xs" id="assigned_{{ sub.assigned_to }}_{{obj.description}}" value="sub_{{sub.description}}">Assigned To: -nessuno-</button>
 					                        	{% endif %}
 					                        	{% if sub.priority.id == 1 %}
 						                        	<button type="button" class="btn btn-success btn-xs">{{sub.priority}}</button>
@@ -144,9 +123,8 @@
 		                                    
 		                            </div> <!-- div class="panel panel-default" -->
 		                            
-	                            {% endif %}
+	                    {% endif %}
 	
-                            {% endif %}
 
                         {% endfor %}
                             
@@ -167,10 +145,148 @@
 
 	    </div> <!-- div class="row" -->
     {% endfor %}
-
-
+	
+</div>
 {% else %}
     <p>Nessuna progetto presente.</p>
+</div>
 {% endif %}
-        
+<script type="text/javascript">
+
+var show_complete 	= false;
+var show_supervisor = false;
+var show_task		= false;
+var actual_user		= "{{user}}";
+
+function myFunction() {
+  // Declare variables
+  var input, filter, panel, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = "projects_" + input.value;
+  filter = filter.toUpperCase();
+  panel_list = $('div[id^="projects_"]');
+  super_visor_list = $('[id^="supervisor_"]')
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < panel_list.length; i++) {
+
+    if (panel_list[i]) {
+      txtValue = panel_list[i].id
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        panel_list[i].style.display = "";
+      } else {
+        panel_list[i].style.display = "none";
+      }
+    }
+  }
+  filter = "supervisor_" + input.value;
+  filter = filter.toUpperCase()
+  for (i = 0; i < super_visor_list.length; i++) {
+    if (super_visor_list[i].value) {
+      txtValue = super_visor_list[i].id;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        panel = document.getElementById(super_visor_list[i].value);
+        panel.style.display = "";
+      }
+    }
+  }
+}
+
+function Show_Complete() {
+	show_complete = !show_complete;
+	Show_Function()
+  	if(show_complete){
+		document.getElementById("show_complete").src = "{% static "img/buttons/Gnome-colors-emblem-desktop-alt-64.png" %}" ;
+		document.getElementById("show_complete_button").lastChild.data = "Nascondi Completati";
+	}
+	else{
+		document.getElementById("show_complete").src = "{% static "img/buttons/Gnome-colors-emblem-desktop-alt-aply-64.png" %}" ;
+		document.getElementById("show_complete_button").lastChild.data = "Visualizza Completati";
+	}
+}
+
+function Show_Supervisor() {
+  	show_supervisor = !show_supervisor;
+	Show_Function();
+  	if(show_supervisor){
+		document.getElementById("show_supervisor").src = "{% static "img/buttons/Gnome-users-64.png" %}" ;
+		document.getElementById("show_supervisor_button").lastChild.data = "Tutti i Progetti";
+	}
+	else{
+		document.getElementById("show_supervisor").src = "{% static "img/buttons/Gnome-user-64.png" %}" ;
+		document.getElementById("show_supervisor_button").lastChild.data = "I Miei Progetti";
+	}
+}
+
+function Show_Task() {
+  	show_task = !show_task;
+	Show_Function();
+  	if(show_task){
+		document.getElementById("show_task").src = "{% static "img/buttons/Gnome-system-alltask-64.png" %}" ;
+		document.getElementById("show_task_button").lastChild.data = "Tutti i Compiti";
+	}
+	else{
+		document.getElementById("show_task").src = "{% static "img/buttons/Gnome-system-mytask-64.png" %}" ;
+		document.getElementById("show_task_button").lastChild.data = "I Miei Compito";
+	}
+}
+
+function Show_Function(){
+	var coplete_button_list  	= $('[id^="coplete_sub_"]');
+	var supervisor_button_list	= $('[id^="supervisor_"]');
+	var assigned_button_list 	= $('[id^="assigned_"]');
+  	var panel_list 				= $('[id^="projects_"]');
+  	var sub_panel_list 			= $('div[id^="sub_"]');
+  	var PrgSet	= new Set();
+	var TaskSet	= new Set()
+    if (show_supervisor) {
+    	for (i = 0; i < supervisor_button_list.length; i++) { 
+    		if(supervisor_button_list[i].id.includes("_" + actual_user)){ 	
+	    		if(!PrgSet.has(supervisor_button_list[i].value)) PrgSet.add(supervisor_button_list[i].value);	
+	    	}
+	    }
+	}
+	else{
+		for(i = 0; i < panel_list.length; i++){
+			PrgSet.add(panel_list[i].id);
+		}
+    }
+    if (show_task) {
+    	for (i = 0; i < assigned_button_list.length; i++) { 
+    		if(assigned_button_list[i].id.includes("_" + actual_user)){ 
+    			task_element = document.getElementById(assigned_button_list[i].value);
+		    	if(!PrgSet.has(task_element.value)) TaskSet.add(task_element.id);	
+	    	}
+	    
+	    }
+	 }
+	 else{
+	    for (i = 0; i < sub_panel_list.length; i++) { 
+    		if(PrgSet.has(sub_panel_list[i].getAttribute('value'))) TaskSet.add(sub_panel_list[i].id);		
+	   	}
+	}
+	for(i = 0; i < panel_list.length; i++){
+		if(PrgSet.has(panel_list[i].id)) panel_list[i].style.display = "";
+		else panel_list[i].style.display = "none";
+			
+	}	 
+
+ 	for(i = 0; i < sub_panel_list.length; i++){
+		if(TaskSet.has(sub_panel_list[i].id)){
+ 			if(show_complete){
+		 		sub_panel_list[i].style.display = "";
+		 	}
+		 	else{
+		 		complete_button = document.getElementById("coplete_" + sub_panel_list[i].id);
+		 		if(complete_button.value[0] != 9 && complete_button.value[1] != 9){
+		 			sub_panel_list[i].style.display = ""
+		 		}
+		 		else sub_panel_list[i].style.display = "none";
+		 	}
+		}
+		else sub_panel_list[i].style.display = "none";
+	}	
+}
+
+</script>   
 {% endblock %}

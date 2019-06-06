@@ -38,5 +38,5 @@ def dashboard(request):
             else:
                 projects = Project.objects.exclude(state__description='99 - Completato')
         
-    context = {'projects': projects, }
+    context = {'projects': projects, 'user': request.user.username}
     return HttpResponse(template.render(context, request))
