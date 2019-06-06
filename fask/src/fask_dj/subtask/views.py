@@ -18,14 +18,10 @@ def subtask(request, subtask_id):
 
 @login_required
 def subtask_delete(request, subtask_id):
-    return delete_manager(request, subtask_id, SubTask, subtasks)
+    return delete_manager(request, subtask_id, SubTask, dashboard)
 
 @login_required
 def subtask_task(request, subtask_id, task_id, redirect_name):
-    if(redirect_name == 'dashboard'):
-        tmp_list_view_function = dashboard
-    elif(redirect_name == 'task'):
-        tmp_list_view_function = task
-    
-    return form_manager(request, subtask_id, SubTask, SubTaskForm, 'subtask/subtask.html', tmp_list_view_function, default = {'task': get_object_or_404(Task, pk = task_id)})
+    tmp_list_view_function = dashboard
+    return form_manager(request, subtask_id, SubTask, SubTaskForm, 'subtask/subtask.html', dashboard, default = {'task': get_object_or_404(Task, pk = task_id)})
 

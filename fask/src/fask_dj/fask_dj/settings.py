@@ -21,7 +21,7 @@ if(host_name is None):
     host_name = os.environ.get('HOSTNAME')
 
 if(host_name is None):
-    host_name = os.uname()[1]
+    host_name = os.name()[1]
     
 print('Hostname: ' + host_name)
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'task.apps.TaskConfig',
     'subtask.apps.SubtaskConfig',
+    'group.apps.GroupConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -18,14 +18,9 @@ def task(request, task_id):
 
 @login_required
 def task_delete(request, task_id):
-    return delete_manager(request, task_id, Task, tasks)
+    return delete_manager(request, task_id, Task, dashboard)
 
 @login_required
 def task_project(request, task_id, project_id, redirect_name):
-    if(redirect_name == 'dashboard'):
-        tmp_list_view_function = dashboard
-    elif(redirect_name == 'project'):
-        tmp_list_view_function = project
-    
-    return form_manager(request, task_id, Task, TaskForm, 'task/task.html', tmp_list_view_function, default = {'project': get_object_or_404(Project, pk = project_id)})
+    return form_manager(request, task_id, Task, TaskForm, 'task/task.html', dashboard, default = {'project': get_object_or_404(Project, pk = project_id)})
 
