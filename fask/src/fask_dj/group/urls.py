@@ -18,5 +18,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    # url(r'^$', views.index, name='index'),
-]
+    url(r'^groups', views.groups, name = 'groups'),
+    url(r'^group/(?P<group_id>[0-9]+)/$', views.group, name = 'group'),
+    url(r'^group_delete/(?P<group_id>[0-9]+)/$', views.group_delete, name = 'group_delete'),
+]# url(r'^$', views.index, name='index'),

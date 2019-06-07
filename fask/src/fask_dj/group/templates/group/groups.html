@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block subtitle %}Gruppi{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="col-lg-12">
+    <p>
+        <button type="button" class="btn btn-default col-lg-2" onClick="location.href='{% url 'group' 0 %}'"><img src="{% static "img/buttons/Gnome-document-new-64.png" %}" alt="Icona Nuovo Gruppo"/><br />Nuovo Gruppo</button>
+    </p>
+</div>
+
+{% if groups %}
+    <div class="panel-body">
+        <h3>Elenco Gruppi</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style = "width:50px;"></th>
+                        <th>Gruppo</th>
+                        <th>Annotazioni</th>
+                        <th>Utente Creazione</th>
+                        <th>Utente Modifica</th>
+                        <th>Data Creazione</th>
+                        <th>Data Modifica</th>
+                        <th style = "width:50px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for obj in groups %}
+                    <tr>
+                        <td><button type="button" class="btn btn-outline btn-primary btn-xs" onClick="location.href='{% url 'group' obj.id %}'"><i class="fa fa-pencil"></i></button></td>
+                        <td>{{ obj.description }}</td>
+                        <td>{{ obj.annotation }}</td>
+                        <td>{{ obj.creation_user }}</td>
+                        <td>{{ obj.edit_user }}</td>
+                        <td>{{ obj.creation_date }}</td>
+                        <td>{{ obj.edit_date }}</td>
+                        <!-- <td><button type="button" class="btn btn-outline btn-primary btn-xs" onClick="location.href='#'"><i class="glyphicon glyphicon-duplicate"></i></button></td> -->
+                        <td><button type="button" class="btn btn-outline btn-primary btn-xs" onClick="location.href='{% url 'group_delete' obj.id %}'"><i class="fa fa-trash-o"></i></button></td>
+                    </tr>
+                {% endfor %}
+    
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <p>Nessuna gruppo presente.</p>
+{% endif %}
+
+{% endblock %}
