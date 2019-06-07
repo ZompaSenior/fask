@@ -8,8 +8,8 @@
 <div class="row" style="margin-bottom: 25px">
 	<div class="col-lg-8">
 		<button id = "show_complete_button" type="button" class="block col-lg-3" onclick="Show_Complete()"><img id="show_complete" src="{% static 'img/buttons/Gnome-colors-emblem-desktop-alt-aply-64.png' %}" alt="Completed"/><br/>Visulazza Completati</button>
-		<button id = "show_supervisor_button" type="button" class="block col-lg-3" onclick="Show_Supervisor()"><img id="show_supervisor" src="{% static 'img/buttons/Gnome-user-64.png' %}" alt="Assigned Projencts"/><br/> Visualizza Solo Progetti Utente</button>
-		<button id = "show_task_button" type="button" class="block col-lg-3" onclick="Show_Task()"><img id="show_task" src="{% static 'img/buttons/Gnome-system-mytask-64.png' %}" alt="Assigned Task"/><br/> Visualizza Solo Task Utente</button>
+		<button id = "show_supervisor_button" type="button" class="block col-lg-3" onclick="Show_Supervisor()"  {% if user == "" %} disabled {% endif %}><img id="show_supervisor" src="{% static 'img/buttons/Gnome-user-64.png' %}" alt="Assigned Projencts" {% if user == "" %} title="Non sei loggato" {% else %}title="Utente: {{user}}" {% endif %}/><br/> {% if user == "" %} Non sei loggato {% else %}Visualizza Solo Progetti {{user}}{% endif %}</button>
+		<button id = "show_task_button" type="button" class="block col-lg-3" onclick="Show_Task()"  {% if user == "" %} disabled {% endif %}><img id="show_task" src="{% static 'img/buttons/Gnome-system-mytask-64.png' %}" alt="Assigned Task" {% if user == "" %} title="Non sei loggato" {% else %}title="Utente: {{user}}" {% endif %}/><br/> {% if user == "" %} Non sei loggato {% else %}Visualizza Solo Task  {{user}}{% endif %}</button>
 		<button  type="button" class="block col-lg-3" onclick="location.href='{% url "project" 0  %}';"><img id="show_task" src="{% static 'img/buttons/Gnome-document-new-64.png' %}" alt="New Project"/><br/> Nuovo Progetto</button>
 	</div>
 {% if projects %}
@@ -129,9 +129,9 @@
 		
 		                                    {% for sub2 in sub.task_owner.all %}
 			                                    {% if sub2.completed %}
-			                                    	<div class="panel panel-" id="sub2_{{sub.description}}_{{sub2.description}}" value = "completed" style="background-color : #65d046;" display: none">
+			                                    	<div class="panel panel-" id="sub2_{{sub.description}}_{{sub2.description}}" value = "completed" style="background-color : #65d046; display: none">
 			                                    {% else %}
-			                                        <div class="panel panel-info" id="sub2_{{sub.description}}_{{sub2.description}}" value = "workin_progres" >
+			                                        <div class="panel panel-info" id="sub2_{{sub.description}}_{{sub2.description}}" value = "workin_progress" >
 			                                    {% endif %}
 			                                            <div class="panel-heading clearfix">
 			                                                <span class="pull-left">
@@ -299,7 +299,7 @@ function Show_Supervisor() {
 	}
 	else{
 		document.getElementById("show_supervisor").src = "{% static "img/buttons/Gnome-user-64.png" %}" ;
-		document.getElementById("show_supervisor_button").lastChild.data = "Visualizza Solo Progetti Utente";
+		document.getElementById("show_supervisor_button").lastChild.data = "Visualizza Solo Progetti" + actual_user;
 	}
 }
 
@@ -313,7 +313,7 @@ function Show_Task() {
 	}
 	else{
 		document.getElementById("show_task").src = "{% static "img/buttons/Gnome-system-mytask-64.png" %}" ;
-		document.getElementById("show_task_button").lastChild.data = "Visualizza Solo Task Utente";
+		document.getElementById("show_task_button").lastChild.data = "Visualizza Solo Task" + actual_user;
 	}
 }
 
