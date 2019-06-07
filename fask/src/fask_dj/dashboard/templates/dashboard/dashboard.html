@@ -237,8 +237,7 @@ function myFunction() {
   	var input, filter, panel, tr, td, i, txtValue;
   	PrgSearchSet = new Set();
   	input = document.getElementById("myInput");
-  	filter = "project_" + input.value;
-  	filter = filter.toUpperCase();
+  	filter = input.value.toUpperCase();
   	project_list = $('div[id^="project_"]');
   	supervisor_list = $('[id^="supervisor_"]')
 	group_list = $('[id^="group_"]')
@@ -247,17 +246,15 @@ function myFunction() {
 
     if (project_list[i]) {
       txtValue = project_list[i].id
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      if (txtValue.toUpperCase().includes(filter)) {
           if(!PrgSearchSet.has(project_list[i].id)) PrgSearchSet.add(project_list[i].id);
       } 
     }
   }
-  filter = "supervisor_" + input.value;
-  filter = filter.toUpperCase()
   for (i = 0; i < supervisor_list.length; i++) {
     if (supervisor_list[i].getAttribute('value')) {
       txtValue = supervisor_list[i].id;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      if (txtValue.toUpperCase().includes(filter)) {
         project = document.getElementById(supervisor_list[i].getAttribute('value'));
         if(!PrgSearchSet.has(project.id)) PrgSearchSet.add(project.id)
       }
@@ -266,7 +263,7 @@ function myFunction() {
   for (i = 0; i < group_list.length; i++) {
   	if (group_list[i].getAttribute('value')) {
     	txtValue = group_list[i].id;
-      	if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      	if (txtValue.toUpperCase().includes(filter)) {
         	project = document.getElementById(group_list[i].getAttribute('value'));
         	if(!PrgSearchSet.has(project.id)) PrgSearchSet.add(project.id)
       }
