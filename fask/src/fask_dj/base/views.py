@@ -41,7 +41,7 @@ def form_manager(request, object_id, object_model, form_model, template_name, li
             print('Invalid')
     else:
         form = form_model(instance = tmp_object)
-        
+  
     context = {object_model.__name__.lower(): tmp_object, 'form': form, 'show_trashed': show_trashed }
     print(object_model.__name__.lower())
     
