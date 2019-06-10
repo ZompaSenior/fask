@@ -3,7 +3,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 """from django.db.models import Max
 from django.db.models.aggregates import Count"""
 from base.models import FaskObject, EditInfo
-
+from django.http.response import HttpResponse
+from django.urls import reverse
 # from django.contrib.auth.decorators import login_required
 
 def form_manager(request, object_id, object_model, form_model, template_name, list_view_function, show_trashed = 'False', default = None):
@@ -34,11 +35,13 @@ def form_manager(request, object_id, object_model, form_model, template_name, li
             else:
                 return redirect('/%s/%s/' % (list_view_function.__name__, show_trashed))
                 # return list_view_function(request, show_trashed)
+            
+        
         else:
             print('Invalid')
     else:
         form = form_model(instance = tmp_object)
-        
+  
     context = {object_model.__name__.lower(): tmp_object, 'form': form, 'show_trashed': show_trashed }
     print(object_model.__name__.lower())
     
