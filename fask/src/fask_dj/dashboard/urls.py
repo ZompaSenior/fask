@@ -23,4 +23,7 @@ urlpatterns = [
     url(r'^task_calendar/$', views.task_calendar, name='task_calendar'),
     url(r'^task_calendar_details_request/(?P<select_day>[0-9]+)/(?P<negative>[\w]+)/$', views.task_calendar_details_request, name='task_calendar_details_request'),
     url(r'^task_project/(?P<task_id>[0-9]+)/(?P<project_id>[0-9]+)/(?P<redirect_name>[\w]+)/$', task_project, name='task_project'),
+    url(r'^import_export_page/$', views.import_export_page, name='import_export_page'),
+    url(r'^import/$', views.import_fask, name='import'),
+    url(r'^export/$', views.export_fask, name='export'),
 ]

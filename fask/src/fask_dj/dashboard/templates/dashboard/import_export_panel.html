@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block subtitle %}Dashboard{% endblock %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+{% load field_properties %}
+
+	<div class="col-lg-6">
+	    {% url 'import' as import_url %}
+        {% get_import_export_panel import_url 'JSON' 'Name;Description;Order'%}
+    </div>
+
+<script language="JavaScript" type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/jquery-ui-personalized-1.5.2.packed.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/sprinkle.js"></script>
+<script src="{% static 'css/vendor/jquery/jquery.min.js'%}"></script>
+<script type="text/javascript">
+// ****************************************************************************
+//                              IMPORT/EXPORT
+// ****************************************************************************
+function export_function() {
+    jQuery("<form action='{% url "export" %}' method='post'>{% csrf_token %}</form>")
+            .appendTo('body').submit().remove();
+ }
+
+
+
+</script>   
+{% endblock %}
