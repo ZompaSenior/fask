@@ -105,13 +105,15 @@ WSGI_APPLICATION = 'fask_dj.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'sql_server.pyodbc',
-        'NAME'  : 'Fask',
-        'HOST'  : 'localhost',
+        'NAME': os.environ['DB_NAME'],
+        'HOST': os.environ['DB_HOST'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'AUTOCOMMIT': True,
         'OPTIONS': {
             'driver': 'ODBC Driver 13 for SQL Server',
         },
-   }
+    }
 }
 
 # Password validation
