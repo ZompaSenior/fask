@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block essential_title %} - {{title}} -{% endblock %}
+
+{% block subtitle %}{{title}}{% endblock %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+{% load field_properties %}
+{% if succes %}
+	<div class="col-lg-10">
+		<div class="alert alert-success">
+			{{title}} Success </p>
+			{% if version_list %}
+				<ul>
+					{% for version in version_list %}
+						<li>{{version}}</li>
+					{% endfor %}
+				</ul>
+				</a>
+			{% endif %}	
+		</div>
+		{% if warning_list %}
+			{% for warning in warning_list %}
+				<div class="alert alert-warning">
+					{{ warning }}</a>.
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+	<div class="col-lg-2">
+			<button type="button" class="btn btn-default" style="height:55px" onclick="open_new_pop_up('{{return_url}}');"><img height="45px" src="/static/img/buttons/Gnome-go-next-64.png">
+	</div>
+{% else %}
+	<div class="col-lg-10">
+		<div class="alert alert-danger">
+		{% if error_text %}
+			{{ error_text }}</a>.
+		{% endif %}
+		{% if error_list %}
+			{% for error in error_list %}
+				<div>
+					{{ error }}; </a>
+				</div>
+			{% endfor %}
+		{% endif %}
+		</div>
+		<div>      
+    	    <img src="/static/img/animations/error.gif">
+		</div>
+	</div>
+	<div class="col-lg-2">
+			<button type="button" class="btn btn-default" style="height:55px" onclick="open_new_pop_up('{{return_url}}')"><img height="45px" src="/static/img/buttons/Gnome-emblem-symbolic-link-64.png">
+	</div>
+{% endif %}
+<script language="JavaScript" type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/jquery-ui-personalized-1.5.2.packed.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/sprinkle.js"></script>
+<script src="{% static 'css/vendor/jquery/jquery.min.js'%}"></script>
+<script type="text/javascript">
+
+function open_new_pop_up(url) {
+		window.location.href = url;
+}
+
+</script>
+
+{% endblock %}

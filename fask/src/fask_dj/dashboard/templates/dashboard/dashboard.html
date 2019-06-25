@@ -5,15 +5,22 @@
 {% block content %}
 
 {% load staticfiles %}
+
+{% load field_properties %}
+
+
 <div class="row" style="margin-bottom: 25px">
-	<div class="col-lg-8">
-		<button id = "show_complete_button" type="button" class="block col-lg-3" onclick="Show_Complete()"><img id="show_complete" src="{% static 'img/buttons/Gnome-colors-emblem-desktop-alt-aply-64.png' %}" alt="Completed"/><br/>Visulazza Completati</button>
-		<button id = "show_supervisor_button" type="button" class="block col-lg-3" onclick="Show_Supervisor()"  {% if user == "" %} disabled {% endif %}><img id="show_supervisor" src="{% static 'img/buttons/Gnome-user-64.png' %}" alt="Assigned Projencts" {% if user == "" %} title="Non sei loggato" {% else %}title="Utente: {{user}}" {% endif %}/><br/> {% if user == "" %} Non sei loggato {% else %}Visualizza Solo Progetti {{user}}{% endif %}</button>
-		<button id = "show_task_button" type="button" class="block col-lg-3" onclick="Show_Task()"  {% if user == "" %} disabled {% endif %}><img id="show_task" src="{% static 'img/buttons/Gnome-system-mytask-64.png' %}" alt="Assigned Task" {% if user == "" %} title="Non sei loggato" {% else %}title="Utente: {{user}}" {% endif %}/><br/> {% if user == "" %} Non sei loggato {% else %}Visualizza Solo Task  {{user}}{% endif %}</button>
-		<button  type="button" class="block col-lg-3" onclick="location.href='{% url "project" 0  %}';"><img id="show_task" src="{% static 'img/buttons/Gnome-document-new-64.png' %}" alt="New Project"/><br/> Nuovo Progetto</button>
+	<div class="col-lg-12">
+		<button id = "show_complete_button" type="button" class="block col-lg-2" onclick="Show_Complete()"><img id="show_complete" src="{% static 'img/buttons/Gnome-colors-emblem-desktop-alt-aply-64.png' %}" alt="Completed"/><br/>Visulazza Completati</button>
+		<button id = "show_supervisor_button" type="button" class="block col-lg-2" onclick="Show_Supervisor()"  {% if user == "" %} disabled {% endif %}><img id="show_supervisor" src="{% static 'img/buttons/Gnome-user-64.png' %}" alt="Assigned Projencts" {% if user == "" %} title="Non sei loggato" {% else %}title="Utente: {{user}}" {% endif %}/><br/> {% if user == "" %} Non sei loggato {% else %}Visualizza Solo Progetti {{user}}{% endif %}</button>
+		<button id = "show_task_button" type="button" class="block col-lg-2" onclick="Show_Task()"  {% if user == "" %} disabled {% endif %}><img id="show_task" src="{% static 'img/buttons/Gnome-system-mytask-64.png' %}" alt="Assigned Task" {% if user == "" %} title="Non sei loggato" {% else %}title="Utente: {{user}}" {% endif %}/><br/> {% if user == "" %} Non sei loggato {% else %}Visualizza Solo Task  {{user}}{% endif %}</button>
+		<button  type="button" class="block col-lg-2" onclick="location.href='{% url "project" 0  %}';"><img id="show_task" src="{% static 'img/buttons/Gnome-document-new-64.png' %}" alt="New Project"/><br/> Nuovo Progetto</button>
+		<button  type="button" class="block col-lg-2" onclick="location.href='{% url "import_export_page" %}';"><img src="{% static 'img/buttons/Gnome_go_up_down-64.png' %}" alt="Import Export panel"/><br/> Import Export</button>
 	</div>
+</div>
 {% if projects %}
-	<div class="col-lg-4">
+<div class="row" style="margin-bottom: 10px">
+	<div class="col-lg-12">
 			<input type="text" class = "form-control" id = "myInput" onkeyup="myFunction()" placeholder="Inserisci Progetto,Supervisore o Gruppo..." style="width: 300px; margin: 20px; margin-left: 5px; float: right;">
 			<i class="fa fa-search fa-1x" style="width: 10px; margin: 20px; margin-top: 30px; margin-right: 5px; float: right;"></i>
 	</div>
