@@ -7,6 +7,9 @@ from django.http.response import HttpResponse
 from django.urls import reverse
 # from django.contrib.auth.decorators import login_required
 
+import json
+
+
 def form_manager(request, object_id, object_model, form_model, template_name, list_view_function, show_trashed = 'False', default = None):
     
     if(len(object_id) > 0 and object_id != '0' and object_id != '_'):
@@ -54,9 +57,20 @@ def delete_manager(request, object_id, object_model, list_view_function, show_tr
             if(hasattr(tmp_object, 'set_user')):
                 tmp_object.set_user(str(request.user))
 
-        tmp_object.delete()
+        tmp_object.delete() 
     
-    return list_view_function(request, show_trashed)
+        context={
+                "Esito": True,
+                "trash_state": 1,
+                "show_trashed": False,
+            }
+    else:
+        context={
+                "Esito": False,
+            }  
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
 
 def restore_manager(request, object_id, object_model, list_view_function, show_trashed = False):
     if(len(object_id) > 0 and object_id != '0' and object_id != '_'):
@@ -67,7 +81,19 @@ def restore_manager(request, object_id, object_model, list_view_function, show_t
 
         tmp_object.restore()
         
-    return list_view_function(request, show_trashed)
+        context={
+            "Esito": True,
+            "trash_state": 1,
+            "show_trashed": False,
+        }
+    else:
+        context={
+                "Esito": False,
+            }    
+        
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+
 
 """
 # @login_required
