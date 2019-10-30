@@ -30,9 +30,9 @@
 	    <div class="row">
 		    <div class="col-lg-12">
 		       {% if obj.state|truncatewords:"2" == "99 - ..." %}
-		        	<div class="panel panel-primary" id="project_{{obj.description}}" style="display: none;">
+		        	<div class="panel panel-primary" id="project_{{obj.id}}" value="{{obj.description}}" style="display: none;">
 		       {% else %}
-		        	<div class="panel panel-primary" id="project_{{obj.description}}">
+		        	<div class="panel panel-primary" id="project_{{obj.id}}">
 		       {% endif %}
 		           {% if obj.state|truncatewords:"2" == "99 - ..." %}
 		            	<div class="panel-heading clearfix"  style=" background-color : #65d046;">
@@ -47,25 +47,25 @@
 	                        </div> <!-- div class="col-xs-3" -->
 	                        <span class="pull-right">
             					{% if obj.state %}
-		                        	<button type="button" id ="complete_project_{{obj.description}}" value="{{obj.state}}"  class="btn btn-primary btn-xs-2" style = "background-color: white; color: black; margin: 20px; margin-right: 0px;">{{obj.state}}</button>
+		                        	<button type="button" id ="complete_project_{{obj.id}}" value="{{obj.state}}"  class="btn btn-primary btn-xs-2" style = "background-color: white; color: black; margin: 20px; margin-right: 0px;">{{obj.state}}</button>
 		                        {% else %}
-		                        	<button type="button" id ="complete_project_{{obj.description}}" value="{{obj.state}}" class="btn btn-primary btn-xs-2" style = "background-color: white; color: black; margin: 20px; margin-right: 0px;">-nessuno-</button>
+		                        	<button type="button" id ="complete_project_{{obj.id}}" value="{{obj.state}}" class="btn btn-primary btn-xs-2" style = "background-color: white; color: black; margin: 20px; margin-right: 0px;">-nessuno-</button>
 		                        {% endif %}
-                                 <button type="button" class="btn btn-outline btn-primary btn-xs-2" onClick="location.href='{% url 'project_delete' obj.id %}'" style = "background-color: white; margin: 20px; margin-left: 0px;"><i class="fa fa-trash-o"></i></button>
+                                 <button type="button" class="btn btn-outline btn-primary btn-xs-2" onClick="change_trash_property('project_{{obj.id}}', '{% url 'project_delete' obj.id %}', 'img_{{obj.id}}')" style = "background-color: white; margin: 20px; margin-left: 0px;"><i class="fa fa-trash-o"></i></button>
                             </span>
 	                        <div class="col-xs-9">
 	                            <h3>{{ obj.description }}</h3>
 
                                 {% if obj.supervisor %}
-                                    <div id="supervisor_{{ obj.supervisor }}_{{obj.description}}" value="project_{{obj.description}}">Supervisor: {{ obj.supervisor }}</div>
+                                    <div id="supervisor_{{obj.id}}" value="project_{{obj.id}}">Supervisor: {{ obj.supervisor }}</div>
                                 {% else %}
-                                	<div id="supervisor_nessun_supervisor_{{obj.description}}" value="project_{{obj.description}}">Supervisor: -nessuno- </div>
+                                	<div id="nessun_supervisor_{{obj.id}}" value="project_{{obj.id}}">Supervisor: -nessuno- </div>
                                 {% endif %}
 
 								{% if obj.group %}
-                                    <div id="supervisor_{{ obj.group }}_{{obj.description}}" value="project_{{obj.description}}">Gruppo: {{ obj.group }}</div>
+                                    <div id="group_{{obj.id}}" value="project_{{obj.id}}">Gruppo: {{ obj.group }}</div>
                                 {% else %}
-                                	<div id="supervisor_nessun_group_{{obj.description}}" value="project_{{obj.description}}">Gruppo: -nessuno- </div>
+                                	<div id="nessun_group_{{obj.id}}" value="project_{{obj.id}}">Gruppo: -nessuno- </div>
                                 {% endif %}
 
 	                            <div>{{ obj.annotation }}</div>
@@ -80,9 +80,9 @@
                         {% for sub in obj.task_project_owner.all %}
                         	{% if request.GET.filter_assegnee == "False" or sub.assigned_to.username == request.user.username or not request.GET.filter_assegnee %}
 		                           {% if sub.progression|truncatewords:"2" == "99 - ..." %}
-		                            	<div class="panel" id="sub_{{sub.description}}" value = "project_{{obj.description}}" style="display: none;">
+		                            	<div class="panel" id="sub_{{sub.id}}" value = "project_{{obj.id}}" style="display: none;">
 		                           {% else %}
-		                            	<div class="panel panel-info" id="sub_{{sub.description}}" value ="project_{{obj.description}}">
+		                            	<div class="panel panel-info" id="sub_{{sub.id}}" value ="project_{{obj.id}}">
 		                           {% endif %}
 			                           {% if sub.progression|truncatewords:"2" == "99 - ..." %}
 			                            	<div class="panel-heading clearfix"  style=" background-color : #65d046;">
@@ -94,7 +94,7 @@
 					                        <span class="pull-left">
 												<button type="button" class="btn btn-default btn-xs"  onclick="location.href='{% url "task_project" sub.id obj.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
 												  
-					                        	<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub.annotation }}" value="{{sub.progression}}" id="complete_sub_{{sub.description}}">
+					                        	<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub.annotation }}" value="{{sub.progression}}" id="complete_sub_{{sub.id}}">
 					                        		{{ sub.description }}
 					                        		{% if sub.progression.id == 3 %}
 					                        			</del>
@@ -106,9 +106,9 @@
 					                        		<button type="button" class="btn btn-default btn-xs">Due To: {{ sub.due_to }}</button>
 					                        	{% endif %}
 					                        	{% if sub.assigned_to %}
-					                        		<button type="button" class="btn btn-default btn-xs" id="assigned_{{ sub.assigned_to }}_{{obj.description}}" value="sub_{{sub.description}}">Assigned To: {{ sub.assigned_to }}</button>
+					                        		<button type="button" class="btn btn-default btn-xs" id="assigned_{{ sub.assigned_to }}_{{obj.description}}" value="sub_{{sub.id}}">Assigned To: {{ sub.assigned_to }}</button>
 					                        	{% else %}
-					                        		<button type="button" class="btn btn-default btn-xs" id="assigned_{{ sub.assigned_to }}_{{obj.description}}" value="sub_{{sub.description}}">Assigned To: -nessuno-</button>
+					                        		<button type="button" class="btn btn-default btn-xs" id="assigned_{{ sub.assigned_to }}_{{obj.description}}" value="sub_{{sub.id}}">Assigned To: -nessuno-</button>
 					                        	{% endif %}
 					                        	{% if sub.priority.id == 1 %}
 						                        	<button type="button" class="btn btn-success btn-xs">{{sub.priority}}</button>
@@ -125,7 +125,7 @@
 						                        	{% endif %}
 						                        {% endif %}
 						                        <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "subtask_task" 0 sub.id 'dashboard' %}';"><i class="fa fa-plus-circle fa-1x"></i></button>
-						                        <button type="button" class="btn btn-outline btn-primary btn-xs" onClick="location.href='{% url 'task_delete' sub.id %}'" style = "background-color: white;"><i class="fa fa-trash-o"></i></button>
+						                        <button type="button" class="btn btn-outline btn-primary btn-xs" onClick="change_trash_property('sub_{{sub.id}}', '{% url 'task_delete' sub.id %}', 'img_sub_{{sub_id}}') " style = "background-color: white;"><i class="fa fa-trash-o"></i></button>
 			                                                    
 					                        </span>
 		
@@ -136,17 +136,15 @@
 		
 		                                    {% for sub2 in sub.task_owner.all %}
 			                                    {% if sub2.completed %}
-			                                    	<div class="panel panel-" id="sub2_{{sub.description}}_{{sub2.description}}" value = "completed" style="background-color : #65d046; display: none">
+			                                    	<div class="panel panel-" id="sub2_{{sub2.id}}" value = "completed" style="background-color : #65d046; display: none">
 			                                    {% else %}
-			                                        <div class="panel panel-info" id="sub2_{{sub.description}}_{{sub2.description}}" value = "workin_progress" >
-			                                    {% endif %}
+			                                        <div class="panel panel-info" id="sub2_{{sub2.id}}" value = "workin_progress" >
+			                                    {% endif %}	
 			                                            <div class="panel-heading clearfix">
 			                                                <span class="pull-left">
 			                                                <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url "subtask_task" sub2.id sub.id 'dashboard' %}';"><i class="fa fa-pencil fa-1x"></i></button>
 
 			                                                	<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub2.annotation }}">{{ sub2.description }}</button>
-
-																<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="{{ sub2.annotation }}">{{ sub2.description }}</button>
 			                                                
 
 			                                                </span>
@@ -154,7 +152,7 @@
 			                                                	{% if sub2.completed and sub2.completed_on %}
 			                                                        <button type="button" class="btn btn-default btn-xs">Completed On: {{ sub2.completed_on }}</button>
 			                                                    {% endif %}
-			                                                    <button type="button" class="btn btn-outline btn-primary btn-xs" onClick="location.href='{% url 'subtask_delete' sub2.id %}'" style = "background-color: white;"><i class="fa fa-trash-o"></i></button>
+			                                                    <button type="button" class="btn btn-outline btn-primary btn-xs" onClick="change_trash_property('sub2_{{sub2.id}}', '{% url 'subtask_delete' sub2.id %}', 'img_sub2_{{sub2.id}}')" style = "background-color: white;"><i class="fa fa-trash-o"></i></button>
 			                                                    
 			                                                </span>
 			                                                <!-- <div class="clearfix"></div> -->
@@ -226,12 +224,16 @@ $(document).ready(function() {
 		PrgSearchSet.add(project_list[i].id)
 		PrgTaskSet.add(project_list[i].id)
 		complete_button = document.getElementById("complete_" + project_list[i].id);
-		if(complete_button.value[0] != 9 && complete_button.value[1] != 9)  PrgCompleteSet.add(project_list[i].id)
+		if(complete_button){
+			if(complete_button.value[0] != 9 && complete_button.value[1] != 9)  PrgCompleteSet.add(project_list[i].id)
+		}
 	}
 	for (i = 0; i < panel_list.length; i++) {
 		Task1Set.add(panel_list[i].id);
 		complete_button = document.getElementById("complete_" + panel_list[i].id);
-		if(complete_button.value[0] != 9 && complete_button.value[1] != 9) Task2Set.add(panel_list[i].id);
+		if(complete_button){
+			if(complete_button.value[0] != 9 && complete_button.value[1] != 9) Task2Set.add(panel_list[i].id);
+		}
 	}
 	for (i = 0; i < sub_panel_list.length; i++) {
 		if(sub_panel_list[i].getAttribute('value') != "completed") SubSet.add(sub_panel_list[i].id);
@@ -252,30 +254,13 @@ function myFunction() {
   for (i = 0; i < project_list.length; i++) {
 
     if (project_list[i]) {
-      txtValue = project_list[i].id
+      txtValue = project_list[i].innerText
       if (txtValue.toUpperCase().includes(filter)) {
           if(!PrgSearchSet.has(project_list[i].id)) PrgSearchSet.add(project_list[i].id);
       } 
     }
   }
-  for (i = 0; i < supervisor_list.length; i++) {
-    if (supervisor_list[i].getAttribute('value')) {
-      txtValue = supervisor_list[i].id;
-      if (txtValue.toUpperCase().includes(filter)) {
-        project = document.getElementById(supervisor_list[i].getAttribute('value'));
-        if(!PrgSearchSet.has(project.id)) PrgSearchSet.add(project.id)
-      }
-    }
-  }
-  for (i = 0; i < group_list.length; i++) {
-  	if (group_list[i].getAttribute('value')) {
-    	txtValue = group_list[i].id;
-      	if (txtValue.toUpperCase().includes(filter)) {
-        	project = document.getElementById(group_list[i].getAttribute('value'));
-        	if(!PrgSearchSet.has(project.id)) PrgSearchSet.add(project.id)
-      }
-    }
-  }
+
   Show_Function();
 }
 
@@ -322,19 +307,17 @@ function Show_Task() {
 }
 
 function Control_User(){
-
-	var supervisor_button_list	= $('[id^="supervisor_"]');
 	var assigned_button_list 	= $('[id^="assigned_"]');
 	var project_list 			= $('[id^="project_"]');
 	var sub_panel_list 			= $('[id^="sub_"]');
 	
 	PrgSet			= new Set();
 	Task1Set		= new Set();
-	
+	PrgAssigendTAskSet = new Set();
     if (show_supervisor) {
-    	for (i = 0; i < supervisor_button_list.length; i++) { 
-    		if(supervisor_button_list[i].id.includes("_" + actual_user) && actual_user != ""){ 	
-	    		if(!PrgSet.has(supervisor_button_list[i].getAttribute('value'))) PrgSet.add(supervisor_button_list[i].getAttribute('value'));	
+    	for (i = 0; i < project_list.length; i++) { 
+    		if(project_list[i].innerText.includes("Supervisor: " + actual_user) && actual_user != ""){ 	
+	    		if(!PrgSet.has(project_list[i].id)) PrgSet.add(project_list[i].id);	
 	    	}
 	    }
 	}
@@ -344,16 +327,19 @@ function Control_User(){
 		}
 	}
 	if (show_task) {
-    	for (i = 0; i < assigned_button_list.length; i++) { 
-    		if(assigned_button_list[i].id.includes("_" + actual_user) && actual_user != ""){ 
-    			task_element = document.getElementById(assigned_button_list[i].getAttribute('value'));
-		    	if(PrgSet.has(task_element.getAttribute('value'))) Task1Set.add(task_element.id);
+    	for (i = 0; i < sub_panel_list.length; i++) { 
+    		if(sub_panel_list[i].innerText.includes("Assigned To: " + actual_user) && actual_user != ""){ 
+		    	Task1Set.add(sub_panel_list[i].id);
+		    	PrgTaskSet.add(sub_panel_list[i].value);
 	    	}
 	    }
 	 }
 	 else{
 	    for (i = 0; i < sub_panel_list.length; i++) { 
-    		if(PrgSet.has(sub_panel_list[i].getAttribute('value'))) Task1Set.add(sub_panel_list[i].id);
+    		Task1Set.add(sub_panel_list[i].id);
+	   	}
+	   	for (i = 0; i < project_list.length; i++) {
+	   		PrgTaskSet.add(sub_panel_list[i].value);
 	   	}
 	}
 }
@@ -410,7 +396,6 @@ function Control_Complete(){
 }	
 
 function Show_Function(){
-
   	var project_list 		= $('[id^="project_"]');
   	var panel_list 			= $('div[id^="sub_"]');
   	var sub_panel_list		= $('div[id^="sub2_"]');
