@@ -98,6 +98,7 @@ WSGI_APPLICATION = 'fask_dj.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'sql_server.pyodbc',
         'NAME': os.environ['DB_NAME'],
         'HOST': os.environ['DB_HOST'],
         'USER': os.environ['DB_USER'],
