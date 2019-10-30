@@ -98,23 +98,16 @@ WSGI_APPLICATION = 'fask_dj.wsgi.application'
 
 DATABASES = {
     'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': os.path.join(BASE_DIR, 'db-%s.sqlite3' % (host_name)),
-   }
+        'NAME': os.environ['DB_NAME'],
+        'HOST': os.environ['DB_HOST'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'AUTOCOMMIT': True,
+        'OPTIONS': {
+            'driver': 'ODBC Driver 13 for SQL Server',
+        },
+    }
 }
-
-#DATABASES = {
-#    'default': {
-#        'NAME': os.environ['DB_NAME'],
-#        'HOST': os.environ['DB_HOST'],
-#        'USER': os.environ['DB_USER'],
-#        'PASSWORD': os.environ['DB_PASSWORD'],
-#        'AUTOCOMMIT': True,
-#        'OPTIONS': {
-#            'driver': 'ODBC Driver 13 for SQL Server',
-#        },
-#    }
-#}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
