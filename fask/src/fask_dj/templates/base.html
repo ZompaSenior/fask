@@ -95,7 +95,7 @@
     	resp = $.parseJSON(jqXHR.responseText);
     	if(resp.Esito===true){
     		if(resp.trash_state == 1){
-    			if(resp.show_trashed == 'True'){
+    			if(show_trashed == 'True'){
     				$("#" + img_id).attr('src', resp.restore_static_img);
 		            if(document.getElementById('final_delete_' + element_id )){
 		           		$(document.getElementById('final_delete_' + element_id)).removeAttr('disabled'); 

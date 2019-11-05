@@ -90,7 +90,7 @@ def get_task_calendar_cell(date, task_list):
                 </div>
                 </div>""" 
                                 for task in task_list 
-                                        if task.due_to == date.date()]
+                                        if task.due_to.date() == date.date()]
                 
                 
                 
