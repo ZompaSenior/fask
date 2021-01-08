@@ -54,6 +54,9 @@
                             <a href="{% url "dashboard" %}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
+                            <a href="{% url "groups" %}"><i class="fa fa-flag fa-fw"></i> Groups</a> 
+                        </li>
+                        <li>
                             <a href="{% url "projects" %}"><i class="fa fa-briefcase fa-fw"></i> Projects</a>
                         </li>
                         <li>
@@ -61,6 +64,9 @@
                         </li>
                         <li>
                             <a href="{% url "subtasks" %}"><i class="fa fa-list-alt fa-fw"></i> Sub Tasks</a> 
+                        </li>
+                       	<li>
+                            <a href="{% url "task_calendar" %}"><i class="fa fa-table fa-fw"></i>Task Calendar</a> 
                         </li>
                     </ul>
                 </div>
@@ -81,6 +87,37 @@
         {% block content %}...{% endblock %}
     </div>
 </div>
+
+<script>
+	function change_trash_property(element_id, url_delete, img_id){
+	var req_data = { csrfmiddlewaretoken: '{{ csrf_token }}'};
+    jQuery.post(url_delete, req_data, function(req_data, textStatus, jqXHR) {
+    	resp = $.parseJSON(jqXHR.responseText);
+    	if(resp.Esito===true){
+    		if(resp.trash_state == 1){
+    			if(show_trashed == 'True'){
+    				$("#" + img_id).attr('src', resp.restore_static_img);
+		            if(document.getElementById('final_delete_' + element_id )){
+		           		$(document.getElementById('final_delete_' + element_id)).removeAttr('disabled'); 
+                    }
+                }
+                else {
+                    $('[id^=' + element_id+ ']').remove();
+                }
+           	}
+			else {
+	                $("#" + img_id).attr('src', resp.delete_static_img);
+	                if(document.getElementById('final_delete_' + element_id )){
+	                    $(document.getElementById('final_delete_' + element_id)).attr('disabled', 'True'); 
+	                  }
+	       }
+      }
+      else{
+      	alert(resp.message_error);
+      }
+   });
+}
+</script>
 <!-- /#wrapper -->
 
 {% endblock %}

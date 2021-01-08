@@ -21,7 +21,7 @@ if(host_name is None):
     host_name = os.environ.get('HOSTNAME')
 
 if(host_name is None):
-    host_name = os.uname()[1]
+    host_name = os.name()[1]
     
 print('Hostname: ' + host_name)
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'task.apps.TaskConfig',
     'subtask.apps.SubtaskConfig',
+    'group.apps.GroupConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,6 +83,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': { # Adding this section should work around the issue.
+                'templatetags' : 'django.templatetags.static',
+            },
         },
     },
 ]
@@ -94,11 +98,17 @@ WSGI_APPLICATION = 'fask_dj.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db-%s.sqlite3' % (host_name)),
+        'ENGINE': 'sql_server.pyodbc',
+        'NAME': os.environ['DB_NAME'],
+        'HOST': os.environ['DB_HOST'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'AUTOCOMMIT': True,
+        'OPTIONS': {
+            'driver': 'ODBC Driver 13 for SQL Server',
+        },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -124,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Rome'
 
 USE_I18N = True
 

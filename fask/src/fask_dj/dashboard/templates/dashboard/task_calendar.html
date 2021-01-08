@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block subtitle %}Calendario Task{% endblock %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+{% load field_properties %}
+
+<div class="row" style="margin-bottom: 25px">
+	<div class="col-lg-8">
+		
+	</div>
+</div>
+
+
+<div class="row" style="margin-bottom: 5px">
+	<div class="col-lg-4">
+		<button type="button" class="btn btn-primary" id="month" style="width: 200px; float: left; margin-top: 55px">{{month}}</button>
+	</div>
+	<div class="col-lg-4" style="float: center;">
+		<button type="button" class="block col-lg-3" onclick="button_select_day(-7)" style="float: center; margin-top: 20px"><img  src="{% static 'img/buttons/media-icons-left-64.png' %}" alt="Last-Week" tile="Vai alla scorsa settimana" /></button>
+		<button  type="button" class="block col-lg-3" onclick="button_select_day(7)" style="float: center; margin-top: 20px"><img  src="{% static 'img/buttons/media-icons-right-64.png' %}" alt="Next-Week" tile="Vai alla prossima settimana" /></button>
+	</div>
+	<div class="col-lg-4">
+		<button id = "show_task_button" type="button" class="block col-lg-8" onclick="Show_Task()"  style="float:right;" {% if user == "" %} disabled {% endif %}><img id="show_task" src="{% static 'img/buttons/Gnome-system-mytask-64.png' %}" alt="Assigned Task" {% if user == "" %} title="Non sei loggato" {% else %}title="Utente: {{user}}" {% endif %}/><br/> {% if user == "" %} Non sei loggato {% else %}Visualizza Solo Task  {{user}}{% endif %}</button>
+	</div>
+</div>
+
+<div class="row">
+	<div id = "datail_content">
+        {% table_wait_animation False %}
+     </div>
+</div> <!-- /.panel panel-default -->
+
+<script language="JavaScript" type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/jquery-ui-personalized-1.5.2.packed.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/sprinkle.js"></script>
+<script src="{% static 'css/vendor/jquery/jquery.min.js'%}"></script>
+<script type="text/javascript">
+
+var show_complete 	= false;
+var show_supervisor = false;
+var show_task		= false;
+var actual_user		= "{{user}}";
+var PrgSet			= new Set();
+var PrgSearchSet	= new Set();
+var Task1Set		= new Set();
+var Task2Set		= new Set();
+var SubSet			= new Set();
+var	PrgCompleteSet 	= new Set();
+var PrgTaskSet		= new Set();
+
+
+var select_day_default = 0;
+
+$(function() {
+    get_data("{% url 'task_calendar_details_request' 0 'False' %}");
+});
+
+function button_select_day(select_day){
+	request_url = "{% url 'task_calendar_details_request' 0 'False'%}"
+	select_day_default += select_day
+	if(select_day_default < 0){
+		request_url = request_url.replace("0", ((select_day_default)*(-1)))
+		request_url = request_url.replace("False", "True")
+	}
+	else{
+		request_url = request_url.replace("0", select_day_default)
+	}
+	
+	get_data(request_url);
+}
+
+function get_data(request_url) {
+    var req_data = { csrfmiddlewaretoken: '{{ csrf_token }}'};
+    jQuery.post(request_url, req_data, function(req_data, textStatus, jqXHR) {
+        resp = $.parseJSON(jqXHR.responseText);
+        table = resp;
+        
+        new_page_colspan = 0;
+        
+        tmp_html_table = '<table style="width: 100%"  id = "datail_content" class="table table-striped table-bordered table-hover" >';
+        tmp_html_table += '<thead>';
+        tmp_html_table += '<tr>';
+        for(index in table.head_list){
+        	tmp_html_table += table.head_list[index];
+        }
+		tmp_html_table += '</tr>';
+		tmp_html_table += '</thead>';
+
+		tmp_html_table += '<tbody>';
+		tmp_html_table += '<tr>';
+		for(index in table.cell_list){
+        	tmp_html_table += table.cell_list[index];
+        }
+		tmp_html_table += '</tr>';
+		tmp_html_table += '</tbody>';
+		
+		tmp_html_table += '</table>';
+		console.log(table.month);
+		$("#month").replaceWith('<button type="button" class="btn btn-primary" id="month" style="width: 200px; float: left; margin-top: 55px">' + table.month + '</button>');
+		$("#datail_content").replaceWith(tmp_html_table);
+		Show_Element();
+    });
+};
+
+
+
+
+function Show_Task() {
+  	show_task = !show_task;
+  	Show_Element();
+  	if(show_task){
+		document.getElementById("show_task").src = "{% static "img/buttons/Gnome-system-alltask-64.png" %}" ;
+		document.getElementById("show_task_button").lastChild.data = "Visualizza Tutti i Task";
+	}
+	else{
+		document.getElementById("show_task").src = "{% static "img/buttons/Gnome-system-mytask-64.png" %}" ;
+		document.getElementById("show_task_button").lastChild.data = "Visualizza Solo Task " + actual_user;
+	}
+}
+function Show_Element(){
+	var task_list = $('[id^="task_"]');
+  	if (show_task) {
+    	for (i = 0; i < task_list.length; i++) { 
+    		if(task_list[i].id.includes("_" + actual_user) && actual_user != "")task_list[i].style.display = "";
+   			else task_list[i].style.display = "none";
+	    }
+	}
+	else{
+		for (i = 0; i < task_list.length; i++) { 
+    		task_list[i].style.display = "";
+    	}
+	}
+}
+
+</script>   
+{% endblock %}
